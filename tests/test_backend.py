@@ -368,12 +368,12 @@ class TokenTests(object):
         token_id = uuid.uuid4().hex
         data = {'id': token_id, 'a': 'b'}
         data_ref = self.token_api.create_token(token_id, data)
-        expires = data_ref.pop('expires')
+        expires = data_ref.get('expires')
         self.assertTrue(isinstance(expires, datetime.datetime))
         self.assertDictEqual(data_ref, data)
 
         new_data_ref = self.token_api.get_token(token_id)
-        expires = new_data_ref.pop('expires')
+        expires = new_data_ref.get('expires')
         self.assertTrue(isinstance(expires, datetime.datetime))
         self.assertEquals(new_data_ref, data)
 
