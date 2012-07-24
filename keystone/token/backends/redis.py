@@ -44,6 +44,7 @@ class Token(token.Driver):
             self.r_client.expire(token_id, expires)
         except Exception:
             return None
+        data.update({'expires': expires})
         return data
 
     def delete_token(self, token_id):

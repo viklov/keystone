@@ -16,6 +16,7 @@
 
 import uuid
 from datetime import datetime
+import copy
 
 from keystone import exception
 from keystone import test
@@ -31,17 +32,17 @@ class FakeRedis(object):
         self.redis = {}
 
     def set(self, id, data):
-        self.redis[id] = data
+        self.redis[id] = copy.deepcopy(data)
         return True
 
     def get(self, id):
         try:
-            token = self.redis[id]
-            if token['expires'] < datetime.now():
-                raise exception.TokenNotFound(token_id=id)
-            return token
+            token = copy.deepcopy(self.redis[id])
         except KeyError:
             raise exception.TokenNotFound(token_id=id)
+        if token['expires'] < datetime.now():
+            raise exception.TokenNotFound(token_id=id)
+        return token
 
     def delete(self, id):
         try:
